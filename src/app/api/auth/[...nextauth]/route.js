@@ -14,25 +14,30 @@ export const authOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
+          return null;
         }
 
-        await connectToDatabase();
+        try {
+          await connectToDatabase();
 
-        const admin = await Admin.findOne({ email: credentials.email.toLowerCase().trim() });
-        if (!admin) {
-          throw new Error("Invalid email or password");
+          const admin = await Admin.findOne({ email: credentials.email.toLowerCase().trim() });
+          if (!admin) {
+            return null;
+          }
+
+          const isValid = await bcrypt.compare(credentials.password, admin.passwordHash);
+          if (!isValid) {
+            return null;
+          }
+
+          return {
+            id: admin._id.toString(),
+            email: admin.email,
+          };
+        } catch (error) {
+          console.error("NextAuth authorize callback error:", error);
+          return null;
         }
-
-        const isValid = await bcrypt.compare(credentials.password, admin.passwordHash);
-        if (!isValid) {
-          throw new Error("Invalid email or password");
-        }
-
-        return {
-          id: admin._id.toString(),
-          email: admin.email,
-        };
       },
     }),
   ],

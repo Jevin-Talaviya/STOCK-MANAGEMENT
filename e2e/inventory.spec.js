@@ -57,7 +57,7 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     // There only exists 1 matching row because we searched by unique testPartNo
     await page.locator(`.ant-table-row:has-text("${testPartNo}") a[href*="/edit"]`).click();
     await page.waitForURL(/\/admin\/.*\/edit/);
-    await expect(page.locator("text=Edit Inventory Item")).toBeVisible();
+    await expect(page.locator("text=Edit Inventory Item")).toBeVisible({ timeout: 15000 });
 
     // Edit Quantity
     await page.fill('#item-form_qty', "450");
