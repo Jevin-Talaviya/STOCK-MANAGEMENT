@@ -85,7 +85,7 @@ export default function EditItemPage({ params }) {
         )}
       </main>
       <footer className="app-footer">
-        <p>&copy; {new Date().getFullYear()} The Rayzon Solar. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Rayzon Solar. All rights reserved.</p>
       </footer>
     </div>
   );

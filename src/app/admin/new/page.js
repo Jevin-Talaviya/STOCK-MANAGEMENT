@@ -46,7 +46,7 @@ export default function NewItemPage() {
         <ItemForm onSave={handleSave} loading={loading} title="Add New Item" />
       </main>
       <footer className="app-footer">
-        <p>&copy; {new Date().getFullYear()} The Rayzon Solar. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Rayzon Solar. All rights reserved.</p>
       </footer>
     </div>
   );

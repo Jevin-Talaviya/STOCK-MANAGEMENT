@@ -48,7 +48,7 @@ export default function Header() {
           <div className="header-title-section" style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>
             <BoxPlotOutlined style={{ fontSize: 26, color: "#4f46e5" }} />
             <Title level={4} style={{ margin: 0, fontWeight: 700, letterSpacing: -0.5 }}>
-              The Rayzon Solar
+              Rayzon Solar
             </Title>
           </div>
         </Link>

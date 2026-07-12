@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "The Rayzon Solar",
+  title: "Rayzon Solar",
   description: "Secure Full-Stack Stock and Inventory Management System",
 };
 

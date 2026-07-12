@@ -20,7 +20,7 @@ jest.mock("@ant-design/icons", () => ({
 describe("Header Component", () => {
   it("renders public layout correctly with logo name and admin login button", () => {
     render(<Header />);
-    expect(screen.getByText("The Rayzon Solar")).toBeInTheDocument();
+    expect(screen.getByText("Rayzon Solar")).toBeInTheDocument();
     expect(screen.getByText("Admin Login")).toBeInTheDocument();
   });
 });
