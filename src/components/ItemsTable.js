@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Table, Button, Popconfirm, Image, Input, Space, Tooltip, Empty, Modal } from "antd";
-import { EditOutlined, DeleteOutlined, InboxOutlined, SearchOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, InboxOutlined, SearchOutlined, LeftOutlined, RightOutlined, DownloadOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 export default function ItemsTable({
@@ -25,6 +25,24 @@ export default function ItemsTable({
   // Custom image preview popup state
   const [previewRecord, setPreviewRecord] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const handleDownload = async (imageUrl, defaultFilename) => {
+    try {
+      const response = await fetch(imageUrl, { mode: "cors" });
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = defaultFilename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download image via fetch, falling back to open in tab:", error);
+      window.open(imageUrl, "_blank");
+    }
+  };
 
   const handleRowClick = (record) => {
     setPreviewRecord(record);
@@ -291,13 +309,32 @@ export default function ItemsTable({
             onClick={(e) => e.stopPropagation()} 
             style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}
           >
-            <div style={{ width: "100%", marginBottom: 16, textAlign: "left" }}>
-              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
-                {previewRecord.machineName}
-              </h3>
-              <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: 14 }}>
-                Part No: <span style={{ fontWeight: 600, color: "#334155" }}>{previewRecord.partNo}</span>
-              </p>
+            <div style={{ width: "100%", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+              <div style={{ textAlign: "left" }}>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
+                  {previewRecord.machineName}
+                </h3>
+                <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: 14 }}>
+                  Part No: <span style={{ fontWeight: 600, color: "#334155" }}>{previewRecord.partNo}</span>
+                </p>
+              </div>
+              {previewRecord.images && previewRecord.images.length > 0 && (
+                <Tooltip title="Download image">
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<DownloadOutlined />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const imgUrl = previewRecord.images[activeImageIndex];
+                      const ext = imgUrl.split(".").pop().split("?")[0] || "webp";
+                      const filename = `${previewRecord.machineName.replace(/[\s/\\?%*:|"<>]/g, "_")}_${activeImageIndex + 1}.${ext}`;
+                      handleDownload(imgUrl, filename);
+                    }}
+                    style={{ background: "#4f46e5", border: "none" }}
+                  />
+                </Tooltip>
+              )}
             </div>
 
             {previewRecord.images && previewRecord.images.length > 0 ? (
