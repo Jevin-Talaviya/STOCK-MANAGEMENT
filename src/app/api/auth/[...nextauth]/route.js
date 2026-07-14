@@ -4,6 +4,11 @@ import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/mongodb";
 import Admin from "@/models/Admin";
 
+// Auto-detect correct URL on Vercel if NEXTAUTH_URL is missing or set to localhost
+if (process.env.VERCEL_URL && (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.includes("localhost"))) {
+  process.env.NEXTAUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
