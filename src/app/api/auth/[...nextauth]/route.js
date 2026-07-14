@@ -12,33 +12,63 @@ export const authOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+     async authorize(credentials) {
+  console.log("[NextAuth] authorize called with email:", credentials?.email);
 
-        try {
-          await connectToDatabase();
+  if (!credentials?.email || !credentials?.password) {
+    console.log("[NextAuth] Missing credentials");
+    return null;
+  }
 
-          const admin = await Admin.findOne({ email: credentials.email.toLowerCase().trim() });
-          if (!admin) {
-            return null;
-          }
+  // Step 1: Connect to MongoDB
+  let db;
+  try {
+    db = await connectToDatabase();
+    console.log("[NextAuth] MongoDB connected successfully");
+  } catch (err) {
+    console.error("[NextAuth] MongoDB connection FAILED:", err.message);
+    throw new Error("Database connection failed. Please try again later.");
+  }
 
-          const isValid = await bcrypt.compare(credentials.password, admin.passwordHash);
-          if (!isValid) {
-            return null;
-          }
+  // Step 2: Find admin user
+  let admin;
+  try {
+    admin = await Admin.findOne({
+      email: credentials.email.toLowerCase().trim(),
+    });
+    console.log("[NextAuth] Admin lookup result:", admin ? `found (${admin.email})` : "NOT FOUND");
+  } catch (err) {
+    console.error("[NextAuth] Admin query FAILED:", err.message);
+    throw new Error("Database query failed. Please try again later.");
+  }
 
-          return {
-            id: admin._id.toString(),
-            email: admin.email,
-          };
-        } catch (error) {
-          console.error("NextAuth authorize callback error:", error);
-          return null;
-        }
-      },
+  if (!admin) {
+    return null;
+  }
+
+  // Step 3: Verify password
+  let isValid;
+  try {
+    console.log("[NextAuth] Hash prefix:", admin.passwordHash?.substring(0, 7));
+    isValid = await bcrypt.compare(
+      credentials.password,
+      admin.passwordHash
+    );
+    console.log("[NextAuth] Password match:", isValid);
+  } catch (err) {
+    console.error("[NextAuth] bcrypt.compare FAILED:", err.message);
+    throw new Error("Password verification failed. Please try again later.");
+  }
+
+  if (!isValid) {
+    return null;
+  }
+
+  return {
+    id: admin._id.toString(),
+    email: admin.email,
+  };
+}
     }),
   ],
   session: {
