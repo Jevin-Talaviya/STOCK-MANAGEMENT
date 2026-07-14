@@ -158,6 +158,11 @@ export default function ItemsTable({
       key: "machineName",
     },
     {
+      title: "SAP Code",
+      dataIndex: "sapCode",
+      key: "sapCode",
+    },
+    {
       title: "Material Description",
       dataIndex: "materialDescription",
       key: "materialDescription",

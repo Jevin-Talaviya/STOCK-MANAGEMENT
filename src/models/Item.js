@@ -7,6 +7,10 @@ const ItemSchema = new mongoose.Schema(
       required: [true, "Machine Name is required"],
       trim: true,
     },
+    sapCode: {
+      type: String,
+      trim: true,
+    },
     materialDescription: {
       type: String,
       trim: true,
@@ -47,6 +51,7 @@ const ItemSchema = new mongoose.Schema(
 // Indexes for query performance
 ItemSchema.index({ partNo: 1 });
 ItemSchema.index({ machineName: 1 });
+ItemSchema.index({ sapCode: 1 });
 ItemSchema.index({ createdAt: -1 });
 
 export default mongoose.models.Item || mongoose.model("Item", ItemSchema);

@@ -33,7 +33,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    const { machineName, materialDescription, partNo, specification, qty, storeLocation, images } = body;
+    const { machineName, sapCode, materialDescription, partNo, specification, qty, storeLocation, images } = body;
 
     if (!machineName || !partNo) {
       return NextResponse.json({ error: "Machine Name and Part Number are required" }, { status: 400 });
@@ -49,6 +49,7 @@ export async function PUT(request, { params }) {
     }
 
     existingItem.machineName = machineName;
+    existingItem.sapCode = sapCode;
     existingItem.materialDescription = materialDescription;
     existingItem.partNo = partNo;
     existingItem.specification = specification;

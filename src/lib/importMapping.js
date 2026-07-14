@@ -23,6 +23,13 @@ export function getHeaderMapping(rawHeaders) {
     "machinetype": "machineName",
     "equipment": "machineName",
     
+    // sapCode
+    "sapcode": "sapCode",
+    "sap": "sapCode",
+    "sapno": "sapCode",
+    "sapnumber": "sapCode",
+    "sapmaterialcode": "sapCode",
+
     // materialDescription
     "materialdescription": "materialDescription",
     "description": "materialDescription",

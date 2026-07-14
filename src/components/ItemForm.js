@@ -60,6 +60,13 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
           </div>
 
           <Form.Item
+            label="SAP Code"
+            name="sapCode"
+          >
+            <Input placeholder="Enter SAP code" />
+          </Form.Item>
+
+          <Form.Item
             label="Part Number (Part No)"
             name="partNo"
             rules={[{ required: true, message: "Please input the part number!" }]}

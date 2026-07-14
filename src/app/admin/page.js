@@ -157,7 +157,7 @@ export default function AdminPage() {
             <p style={{ marginBottom: 12 }}>
               Upload an Excel (.xlsx, .xls) or CSV file. The columns must include at minimum:
               <strong> Machine Name</strong> and <strong>Part No</strong>.
-              Other columns: Material Description, Specification, Qty, Store Location.
+              Other columns: SAP Code, Material Description, Specification, Qty, Store Location.
             </p>
             
             <Upload.Dragger {...importProps} disabled={importLoading}>
