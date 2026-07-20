@@ -16,7 +16,7 @@ describe("Import Mapping - normalizeHeader", () => {
 
 describe("Import Mapping - getHeaderMapping", () => {
   it("should map headers to correct schema fields", () => {
-    const rawHeaders = ["Machine Name", "description", "part_no", "Specification", "qty", "location"];
+    const rawHeaders = ["Machine Name", "description", "part_no", "Specification", "location"];
     const mapping = getHeaderMapping(rawHeaders);
 
     expect(mapping).toEqual({
@@ -24,7 +24,6 @@ describe("Import Mapping - getHeaderMapping", () => {
       "description": "materialDescription",
       "part_no": "partNo",
       "Specification": "specification",
-      "qty": "qty",
       "location": "storeLocation",
     });
   });
@@ -59,7 +58,7 @@ describe("Import Mapping - validateMapping", () => {
     expect(validationOnlyMachine.missing).toContain("Part No");
     expect(validationOnlyMachine.missing).not.toContain("Machine Name");
 
-    const headersNone = ["Qty", "Location"];
+    const headersNone = ["Location"];
     const mappingNone = getHeaderMapping(headersNone);
     const validationNone = validateMapping(mappingNone, headersNone);
 

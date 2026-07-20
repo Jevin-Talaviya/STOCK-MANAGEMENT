@@ -85,13 +85,6 @@ export async function POST(request) {
       }
 
       // Format types
-      if (doc.qty !== undefined) {
-        const qtyVal = Number(doc.qty);
-        doc.qty = isNaN(qtyVal) ? 0 : qtyVal;
-      } else {
-        doc.qty = 0;
-      }
-
       if (doc.machineName !== undefined) doc.machineName = String(doc.machineName).trim();
       if (doc.sapCode !== undefined) doc.sapCode = String(doc.sapCode).trim();
       if (doc.partNo !== undefined) doc.partNo = String(doc.partNo).trim();

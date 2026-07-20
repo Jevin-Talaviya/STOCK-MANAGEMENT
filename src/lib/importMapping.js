@@ -50,12 +50,6 @@ export function getHeaderMapping(rawHeaders) {
     "specs": "specification",
     "size": "specification",
     
-    // qty
-    "qty": "qty",
-    "quantity": "qty",
-    "amount": "qty",
-    "count": "qty",
-    
     // storeLocation
     "storelocation": "storeLocation",
     "location": "storeLocation",

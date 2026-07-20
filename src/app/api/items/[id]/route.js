@@ -33,7 +33,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    const { machineName, sapCode, materialDescription, partNo, specification, qty, storeLocation, images } = body;
+    const { machineName, sapCode, materialDescription, partNo, specification, storeLocation, images } = body;
 
     if (!machineName || !partNo) {
       return NextResponse.json({ error: "Machine Name and Part Number are required" }, { status: 400 });
@@ -53,7 +53,6 @@ export async function PUT(request, { params }) {
     existingItem.materialDescription = materialDescription;
     existingItem.partNo = partNo;
     existingItem.specification = specification;
-    existingItem.qty = qty !== undefined ? Number(qty) : 0;
     existingItem.storeLocation = storeLocation;
 
     const updatedItem = await existingItem.save();

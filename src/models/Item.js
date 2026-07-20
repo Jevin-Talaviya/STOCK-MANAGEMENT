@@ -24,10 +24,6 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    qty: {
-      type: Number,
-      default: 0,
-    },
     storeLocation: {
       type: String,
       trim: true,

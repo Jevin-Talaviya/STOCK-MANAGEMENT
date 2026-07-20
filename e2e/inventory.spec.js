@@ -34,9 +34,6 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     await page.fill('input[placeholder="e.g. Aisle 3, Shelf B"]', "Aisle E2E");
     await page.fill('textarea[placeholder="Provide details of material composition, structure etc."]', "Specially created material for E2E tests");
     await page.fill('textarea[placeholder="Dimensions, tolerances, standards..."]', "Tolerance +/- 0.5mm");
-    
-    // Fill Qty input (using the exact ID selector)
-    await page.fill('#item-form_qty', "120");
 
     // Click save
     await page.click('button:has-text("Save Record")');
@@ -59,18 +56,15 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     await page.waitForURL(/\/admin\/.*\/edit/);
     await expect(page.locator("text=Edit Inventory Item")).toBeVisible({ timeout: 15000 });
 
-    // Edit Quantity
-    await page.fill('#item-form_qty', "450");
     await page.click('button:has-text("Save Record")');
 
     // Verifies edit completes
     await page.waitForURL(/\/admin/);
     await expect(page.locator("text=Inventory item updated successfully!")).toBeVisible();
 
-    // 7. Verify updated value and Delete item via multi-select confirmation
+    // 7. Delete item via multi-select confirmation
     await page.fill('input[placeholder*="Search items by machine"]', testPartNo);
     await page.press('input[placeholder*="Search items by machine"]', "Enter");
-    await expect(page.locator("text=450")).toBeVisible();
 
     // Select matching row checkbox
     await page.locator(`.ant-table-row:has-text("${testPartNo}") input[type="checkbox"]`).click();

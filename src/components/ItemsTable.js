@@ -178,13 +178,6 @@ export default function ItemsTable({
       key: "specification",
     },
     {
-      title: "Qty",
-      dataIndex: "qty",
-      key: "qty",
-      width: 100,
-      render: (val) => val ?? 0,
-    },
-    {
       title: "Store Location",
       dataIndex: "storeLocation",
       key: "storeLocation",

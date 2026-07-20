@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Form, Input, InputNumber, Button, Card, Space, Typography } from "antd";
+import { Form, Input, Button, Card, Space, Typography } from "antd";
 import { ArrowLeftOutlined, SaveOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import ImageUploader from "./ImageUploader";
@@ -15,12 +15,10 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
     if (initialValues) {
       form.setFieldsValue({
         ...initialValues,
-        qty: initialValues.qty ?? 0,
         images: initialValues.images ?? [],
       });
     } else {
       form.setFieldsValue({
-        qty: 0,
         images: [],
       });
     }
@@ -98,14 +96,6 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
               <Input.TextArea rows={2} placeholder="Dimensions, tolerances, standards..." />
             </Form.Item>
           </div>
-
-          <Form.Item
-            label="Quantity (Qty)"
-            name="qty"
-            rules={[{ type: "number", min: 0, message: "Quantity must be at least 0!" }]}
-          >
-            <InputNumber style={{ width: "100%" }} placeholder="0" />
-          </Form.Item>
 
           <div style={{ gridColumn: "span 2", marginBottom: 24, marginTop: 12 }}>
             <Form.Item label="Upload Photos (Max 10)" name="images">
