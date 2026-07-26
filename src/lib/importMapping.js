@@ -22,6 +22,13 @@ export function getHeaderMapping(rawHeaders) {
     "machine": "machineName",
     "machinetype": "machineName",
     "equipment": "machineName",
+
+    // serialNumber
+    "serialnumber": "serialNumber",
+    "serial": "serialNumber",
+    "serialno": "serialNumber",
+    "srno": "serialNumber",
+    "srnumber": "serialNumber",
     
     // sapCode
     "sapcode": "sapCode",

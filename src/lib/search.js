@@ -25,6 +25,7 @@ export function buildSearchQuery(q) {
   return {
     $or: [
       { machineName: regex },
+      { serialNumber: regex },
       { sapCode: regex },
       { materialDescription: regex },
       { partNo: regex },

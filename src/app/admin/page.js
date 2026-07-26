@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Header from "@/components/Header";
 import ItemsTable from "@/components/ItemsTable";
 import { Button, Space, Typography, Popconfirm, message, Modal, Upload } from "antd";
-import { PlusOutlined, FileExcelOutlined, DeleteOutlined, InboxOutlined } from "@ant-design/icons";
+import { PlusOutlined, FileExcelOutlined, DeleteOutlined, InboxOutlined, DownloadOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 const { Title, Paragraph } = Typography;
@@ -24,26 +24,26 @@ export default function AdminPage() {
     setSelectedRowKeys(keys);
   };
 
-  const handleBulkDelete = async () => {
+  const handleBulkDelete = async (deleteAll = false) => {
     setDeleteLoading(true);
     try {
       const res = await fetch("/api/items/bulk-delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: selectedRowKeys }),
+        body: JSON.stringify(deleteAll ? { deleteAll: true } : { ids: selectedRowKeys }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to delete selected items");
+        throw new Error("Failed to delete items");
       }
 
       const result = await res.json();
-      messageApi.success(result.message || `${selectedRowKeys.length} items deleted`);
+      messageApi.success(result.message || "Deletion successful");
       setSelectedRowKeys([]);
       setRefreshTrigger((prev) => prev + 1); // Refresh table data
     } catch (err) {
       console.error(err);
-      messageApi.error(err.message || "Failed to perform bulk delete");
+      messageApi.error(err.message || "Failed to perform deletion");
     } finally {
       setDeleteLoading(false);
     }
@@ -104,7 +104,7 @@ export default function AdminPage() {
               <Popconfirm
                 title="Bulk Delete"
                 description={`Are you sure you want to delete the ${selectedRowKeys.length} selected items?`}
-                onConfirm={handleBulkDelete}
+                onConfirm={() => handleBulkDelete(false)}
                 okText="Yes"
                 cancelText="No"
                 okButtonProps={{ danger: true, loading: deleteLoading }}
@@ -114,6 +114,25 @@ export default function AdminPage() {
                 </Button>
               </Popconfirm>
             )}
+            <Popconfirm
+              title="Delete All Records"
+              description="Are you absolutely sure you want to delete ALL records in the database? This action is permanent and cannot be undone."
+              onConfirm={() => handleBulkDelete(true)}
+              okText="Yes, Delete All"
+              cancelText="No"
+              okButtonProps={{ danger: true, loading: deleteLoading }}
+            >
+              <Button type="default" danger icon={<DeleteOutlined />}>
+                Delete All Records
+              </Button>
+            </Popconfirm>
+            <Button
+              icon={<DownloadOutlined />}
+              href="/api/items/export"
+              target="_blank"
+            >
+              Download All (Excel)
+            </Button>
             <Button
               icon={<FileExcelOutlined />}
               onClick={() => {

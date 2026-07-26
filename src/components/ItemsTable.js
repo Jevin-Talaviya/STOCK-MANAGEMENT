@@ -158,6 +158,11 @@ export default function ItemsTable({
       key: "machineName",
     },
     {
+      title: "Serial Number",
+      dataIndex: "serialNumber",
+      key: "serialNumber",
+    },
+    {
       title: "SAP Code",
       dataIndex: "sapCode",
       key: "sapCode",
@@ -312,6 +317,11 @@ export default function ItemsTable({
                 <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
                   {previewRecord.machineName}
                 </h3>
+                {previewRecord.serialNumber && (
+                  <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: 14 }}>
+                    Serial No: <span style={{ fontWeight: 600, color: "#334155" }}>{previewRecord.serialNumber}</span>
+                  </p>
+                )}
                 <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: 14 }}>
                   Part No: <span style={{ fontWeight: 600, color: "#334155" }}>{previewRecord.partNo}</span>
                 </p>
