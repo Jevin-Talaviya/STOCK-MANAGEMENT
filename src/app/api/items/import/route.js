@@ -86,7 +86,6 @@ export async function POST(request) {
 
       // Format types
       if (doc.machineName !== undefined) doc.machineName = String(doc.machineName).trim();
-      if (doc.serialNumber !== undefined) doc.serialNumber = String(doc.serialNumber).trim();
       if (doc.sapCode !== undefined) doc.sapCode = String(doc.sapCode).trim();
       if (doc.partNo !== undefined) doc.partNo = String(doc.partNo).trim();
       if (doc.materialDescription !== undefined) doc.materialDescription = String(doc.materialDescription).trim();

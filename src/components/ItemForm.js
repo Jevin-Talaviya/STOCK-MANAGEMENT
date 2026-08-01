@@ -57,12 +57,7 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
             </Form.Item>
           </div>
 
-          <Form.Item
-            label="Serial Number"
-            name="serialNumber"
-          >
-            <Input placeholder="Enter serial number" />
-          </Form.Item>
+
 
           <Form.Item
             label="SAP Code"

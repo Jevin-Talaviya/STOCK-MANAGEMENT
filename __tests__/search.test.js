@@ -29,18 +29,13 @@ describe("Search Utility - buildSearchQuery", () => {
 
     expect(result).toHaveProperty("$or");
     expect(result.$or).toBeInstanceOf(Array);
-    expect(result.$or).toHaveLength(7); // machineName, serialNumber, sapCode, materialDescription, partNo, specification, storeLocation
+    expect(result.$or).toHaveLength(6); // machineName, sapCode, materialDescription, partNo, specification, storeLocation
 
     // Verify machineName query structure
     const machineNameMatch = result.$or.find((item) => item.machineName);
     expect(machineNameMatch).toBeDefined();
     expect(machineNameMatch.machineName.$regex).toBe("AB\\-12");
     expect(machineNameMatch.machineName.$options).toBe("i");
-
-    // Verify serialNumber query structure
-    const serialNumberMatch = result.$or.find((item) => item.serialNumber);
-    expect(serialNumberMatch).toBeDefined();
-    expect(serialNumberMatch.serialNumber.$regex).toBe("AB\\-12");
 
     // Verify sapCode query structure
     const sapCodeMatch = result.$or.find((item) => item.sapCode);

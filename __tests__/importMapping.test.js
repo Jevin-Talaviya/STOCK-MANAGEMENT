@@ -16,17 +16,15 @@ describe("Import Mapping - normalizeHeader", () => {
 
 describe("Import Mapping - getHeaderMapping", () => {
   it("should map headers to correct schema fields", () => {
-    const rawHeaders = ["Machine Name", "Serial Number", "description", "part_no", "Specification", "location", "Sr No"];
+    const rawHeaders = ["Machine Name", "description", "part_no", "Specification", "location"];
     const mapping = getHeaderMapping(rawHeaders);
 
     expect(mapping).toEqual({
       "Machine Name": "machineName",
-      "Serial Number": "serialNumber",
       "description": "materialDescription",
       "part_no": "partNo",
       "Specification": "specification",
       "location": "storeLocation",
-      "Sr No": "serialNumber",
     });
   });
 

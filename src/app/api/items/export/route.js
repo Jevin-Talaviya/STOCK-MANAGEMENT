@@ -15,7 +15,6 @@ export async function GET(request) {
       const imageLinks = item.images && item.images.length > 0 ? item.images.join(", ") : "";
       return {
         "Machine Name": item.machineName || "",
-        "Serial Number": item.serialNumber || "",
         "SAP Code": item.sapCode || "",
         "Material Description": item.materialDescription || "",
         "Part Number": item.partNo || "",

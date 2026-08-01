@@ -7,10 +7,7 @@ const ItemSchema = new mongoose.Schema(
       required: [true, "Machine Name is required"],
       trim: true,
     },
-    serialNumber: {
-      type: String,
-      trim: true,
-    },
+
     sapCode: {
       type: String,
       trim: true,
@@ -51,7 +48,7 @@ const ItemSchema = new mongoose.Schema(
 // Indexes for query performance
 ItemSchema.index({ partNo: 1 });
 ItemSchema.index({ machineName: 1 });
-ItemSchema.index({ serialNumber: 1 });
+
 ItemSchema.index({ sapCode: 1 });
 ItemSchema.index({ createdAt: -1 });
 
