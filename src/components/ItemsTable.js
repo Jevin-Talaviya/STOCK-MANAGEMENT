@@ -168,16 +168,7 @@ export default function ItemsTable({
       dataIndex: "materialDescription",
       key: "materialDescription",
     },
-    {
-      title: "Part No",
-      dataIndex: "partNo",
-      key: "partNo",
-    },
-    {
-      title: "Specification",
-      dataIndex: "specification",
-      key: "specification",
-    },
+
     {
       title: "Store Location",
       dataIndex: "storeLocation",
@@ -228,7 +219,7 @@ export default function ItemsTable({
     <div>
       <div className="filter-bar">
         <Input
-          placeholder="Search items by machine, description, part no, store, spec..."
+          placeholder="Search items by machine, SAP code, description, store location..."
           allowClear
           value={searchVal}
           onChange={(e) => setSearchVal(e.target.value)}
@@ -313,10 +304,6 @@ export default function ItemsTable({
                 <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>
                   {previewRecord.machineName}
                 </h3>
-
-                <p style={{ margin: "4px 0 0 0", color: "#64748b", fontSize: 14 }}>
-                  Part No: <span style={{ fontWeight: 600, color: "#334155" }}>{previewRecord.partNo}</span>
-                </p>
               </div>
               {previewRecord.images && previewRecord.images.length > 0 && (
                 <Tooltip title="Download image">

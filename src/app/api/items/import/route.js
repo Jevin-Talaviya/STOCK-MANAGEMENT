@@ -66,20 +66,9 @@ export async function POST(request) {
       });
 
       const machineNameEmpty = !doc.machineName || String(doc.machineName).trim() === "";
-      const partNoEmpty = !doc.partNo || String(doc.partNo).trim() === "";
 
-      if (machineNameEmpty && partNoEmpty) {
-        skippedRows.push({ rowNum: i + 1, reason: "Both Machine Name and Part No are blank" });
-        skippedCount++;
-        continue;
-      }
       if (machineNameEmpty) {
         skippedRows.push({ rowNum: i + 1, reason: "Machine Name is blank" });
-        skippedCount++;
-        continue;
-      }
-      if (partNoEmpty) {
-        skippedRows.push({ rowNum: i + 1, reason: "Part No is blank" });
         skippedCount++;
         continue;
       }
@@ -87,9 +76,7 @@ export async function POST(request) {
       // Format types
       if (doc.machineName !== undefined) doc.machineName = String(doc.machineName).trim();
       if (doc.sapCode !== undefined) doc.sapCode = String(doc.sapCode).trim();
-      if (doc.partNo !== undefined) doc.partNo = String(doc.partNo).trim();
       if (doc.materialDescription !== undefined) doc.materialDescription = String(doc.materialDescription).trim();
-      if (doc.specification !== undefined) doc.specification = String(doc.specification).trim();
       if (doc.storeLocation !== undefined) doc.storeLocation = String(doc.storeLocation).trim();
 
       doc.images = [];

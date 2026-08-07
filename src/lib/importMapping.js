@@ -36,20 +36,7 @@ export function getHeaderMapping(rawHeaders) {
     "description": "materialDescription",
     "material": "materialDescription",
     "matdesc": "materialDescription",
-    
-    // partNo
-    "partno": "partNo",
-    "partnumber": "partNo",
-    "part": "partNo",
-    "partnum": "partNo",
-    "itemcode": "partNo",
-    
-    // specification
-    "specification": "specification",
-    "specifications": "specification",
-    "spec": "specification",
-    "specs": "specification",
-    "size": "specification",
+
     
     // storeLocation
     "storelocation": "storeLocation",
@@ -80,11 +67,9 @@ export function getHeaderMapping(rawHeaders) {
 export function validateMapping(mapping, rawHeaders) {
   const mappedFields = Object.values(mapping);
   const hasMachineName = mappedFields.includes("machineName");
-  const hasPartNo = mappedFields.includes("partNo");
 
   const missing = [];
   if (!hasMachineName) missing.push("Machine Name");
-  if (!hasPartNo) missing.push("Part No");
 
   return {
     isValid: missing.length === 0,

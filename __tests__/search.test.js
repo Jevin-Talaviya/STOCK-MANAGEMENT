@@ -29,7 +29,7 @@ describe("Search Utility - buildSearchQuery", () => {
 
     expect(result).toHaveProperty("$or");
     expect(result.$or).toBeInstanceOf(Array);
-    expect(result.$or).toHaveLength(6); // machineName, sapCode, materialDescription, partNo, specification, storeLocation
+    expect(result.$or).toHaveLength(4); // machineName, sapCode, materialDescription, storeLocation
 
     // Verify machineName query structure
     const machineNameMatch = result.$or.find((item) => item.machineName);
@@ -41,10 +41,5 @@ describe("Search Utility - buildSearchQuery", () => {
     const sapCodeMatch = result.$or.find((item) => item.sapCode);
     expect(sapCodeMatch).toBeDefined();
     expect(sapCodeMatch.sapCode.$regex).toBe("AB\\-12");
-
-    // Verify partNo query structure
-    const partNoMatch = result.$or.find((item) => item.partNo);
-    expect(partNoMatch).toBeDefined();
-    expect(partNoMatch.partNo.$regex).toBe("AB\\-12");
   });
 });

@@ -33,10 +33,10 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    const { machineName, sapCode, materialDescription, partNo, specification, storeLocation, images } = body;
+    const { machineName, sapCode, materialDescription, storeLocation, images } = body;
 
-    if (!machineName || !partNo) {
-      return NextResponse.json({ error: "Machine Name and Part Number are required" }, { status: 400 });
+    if (!machineName) {
+      return NextResponse.json({ error: "Machine Name is required" }, { status: 400 });
     }
 
     // Compare images to delete the removed ones
@@ -51,8 +51,7 @@ export async function PUT(request, { params }) {
     existingItem.machineName = machineName;
     existingItem.sapCode = sapCode;
     existingItem.materialDescription = materialDescription;
-    existingItem.partNo = partNo;
-    existingItem.specification = specification;
+
     existingItem.storeLocation = storeLocation;
 
     const updatedItem = await existingItem.save();

@@ -17,8 +17,7 @@ export async function GET(request) {
         "Machine Name": item.machineName || "",
         "SAP Code": item.sapCode || "",
         "Material Description": item.materialDescription || "",
-        "Part Number": item.partNo || "",
-        "Specification": item.specification || "",
+
         "Store Location": item.storeLocation || "",
         "Thumbnail Image Links": imageLinks
       };

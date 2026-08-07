@@ -1,7 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
 test.describe("Stock & Inventory Management E2E Flow", () => {
-  const testPartNo = `T-${Date.now()}`;
   const testMachine = `M-${Date.now()}`;
 
   test("admin end-to-end CRUD flow", async ({ page }) => {
@@ -30,10 +29,8 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     
     // Fill the fields
     await page.fill('input[placeholder="Enter machine name or category"]', testMachine);
-    await page.fill('input[placeholder="e.g. ABC-1234-X"]', testPartNo);
     await page.fill('input[placeholder="e.g. Aisle 3, Shelf B"]', "Aisle E2E");
     await page.fill('textarea[placeholder="Provide details of material composition, structure etc."]', "Specially created material for E2E tests");
-    await page.fill('textarea[placeholder="Dimensions, tolerances, standards..."]', "Tolerance +/- 0.5mm");
 
     // Click save
     await page.click('button:has-text("Save Record")');
@@ -43,16 +40,15 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     await expect(page.locator("text=Inventory item created successfully!")).toBeVisible();
 
     // 5. Search for the item to check it displays
-    await page.fill('input[placeholder*="Search items by machine"]', testPartNo);
+    await page.fill('input[placeholder*="Search items by machine"]', testMachine);
     await page.press('input[placeholder*="Search items by machine"]', "Enter");
     
     await expect(page.locator(`text=${testMachine}`)).toBeVisible();
-    await expect(page.locator(`text=${testPartNo}`)).toBeVisible();
 
-    // 6. Edit item to update quantity
+    // 6. Edit item
     // Antd Actions column: Click the edit link directly
-    // There only exists 1 matching row because we searched by unique testPartNo
-    await page.locator(`.ant-table-row:has-text("${testPartNo}") a[href*="/edit"]`).click();
+    // There only exists 1 matching row because we searched by unique testMachine
+    await page.locator(`.ant-table-row:has-text("${testMachine}") a[href*="/edit"]`).click();
     await page.waitForURL(/\/admin\/.*\/edit/);
     await expect(page.locator("text=Edit Inventory Item")).toBeVisible({ timeout: 15000 });
 
@@ -63,11 +59,11 @@ test.describe("Stock & Inventory Management E2E Flow", () => {
     await expect(page.locator("text=Inventory item updated successfully!")).toBeVisible();
 
     // 7. Delete item via multi-select confirmation
-    await page.fill('input[placeholder*="Search items by machine"]', testPartNo);
+    await page.fill('input[placeholder*="Search items by machine"]', testMachine);
     await page.press('input[placeholder*="Search items by machine"]', "Enter");
 
     // Select matching row checkbox
-    await page.locator(`.ant-table-row:has-text("${testPartNo}") input[type="checkbox"]`).click();
+    await page.locator(`.ant-table-row:has-text("${testMachine}") input[type="checkbox"]`).click();
 
     // Click "Delete Selected (1)" bulk trigger
     const bulkDeleteBtn = page.locator('button:has-text("Delete Selected (1)")');

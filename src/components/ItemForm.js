@@ -66,13 +66,7 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
             <Input placeholder="Enter SAP code" />
           </Form.Item>
 
-          <Form.Item
-            label="Part Number (Part No)"
-            name="partNo"
-            rules={[{ required: true, message: "Please input the part number!" }]}
-          >
-            <Input placeholder="e.g. ABC-1234-X" />
-          </Form.Item>
+
 
           <Form.Item
             label="Store Location"
@@ -90,14 +84,7 @@ export default function ItemForm({ initialValues = null, onSave, loading = false
             </Form.Item>
           </div>
 
-          <div style={{ gridColumn: "span 2" }}>
-            <Form.Item
-              label="Specification"
-              name="specification"
-            >
-              <Input.TextArea rows={2} placeholder="Dimensions, tolerances, standards..." />
-            </Form.Item>
-          </div>
+
 
           <div style={{ gridColumn: "span 2", marginBottom: 24, marginTop: 12 }}>
             <Form.Item label="Upload Photos (Max 10)" name="images">

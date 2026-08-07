@@ -16,15 +16,7 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    partNo: {
-      type: String,
-      required: [true, "Part Number is required"],
-      trim: true,
-    },
-    specification: {
-      type: String,
-      trim: true,
-    },
+
     storeLocation: {
       type: String,
       trim: true,
@@ -46,7 +38,7 @@ const ItemSchema = new mongoose.Schema(
 );
 
 // Indexes for query performance
-ItemSchema.index({ partNo: 1 });
+
 ItemSchema.index({ machineName: 1 });
 
 ItemSchema.index({ sapCode: 1 });
