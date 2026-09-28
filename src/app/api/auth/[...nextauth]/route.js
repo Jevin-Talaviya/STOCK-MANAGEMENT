@@ -41,7 +41,7 @@ export const authOptions = {
     admin = await Admin.findOne({
       email: credentials.email.toLowerCase().trim(),
     });
-    console.log("[NextAuth] Admin lookup result:", admin ? `found (${admin.email})` : "NOT FOUND");
+    console.log("[NextAuth] Admin lookup result:", admin ? `found (${admin.email}, location: ${admin.location})` : "NOT FOUND");
   } catch (err) {
     console.error("[NextAuth] Admin query FAILED:", err.message);
     throw new Error("Database query failed. Please try again later.");
@@ -72,6 +72,7 @@ export const authOptions = {
   return {
     id: admin._id.toString(),
     email: admin.email,
+    location: admin.location,
   };
 }
     }),
@@ -85,6 +86,19 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.location = user.location;
+      }
+      // If location is missing from an existing token, fetch it from DB
+      if (!token.location && token.email) {
+        try {
+          await connectToDatabase();
+          const admin = await Admin.findOne({ email: token.email }).select("location").lean();
+          if (admin?.location) {
+            token.location = admin.location;
+          }
+        } catch (err) {
+          console.error("[NextAuth] Failed to fetch location for stale token:", err.message);
+        }
       }
       return token;
     },
@@ -93,6 +107,7 @@ export const authOptions = {
         session.user = {
           id: token.id,
           email: token.email,
+          location: token.location,
         };
       }
       return session;

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Item from "@/models/Item";
 import { buildSearchQuery } from "@/lib/search";
+import { getAdminLocation } from "@/lib/authHelpers";
 
 export async function GET(request) {
   try {
@@ -11,8 +12,22 @@ export async function GET(request) {
     const q = searchParams.get("q") || "";
     const page = parseInt(searchParams.get("page") || "1", 10);
     const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
+    const locationFilter = searchParams.get("location") || "";
 
     const query = buildSearchQuery(q);
+
+    // Apply location filter if provided
+    if (locationFilter && ["kim", "kosamba"].includes(locationFilter.toLowerCase())) {
+      if (query.$or) {
+        // Wrap existing $or with $and to combine with location filter
+        const searchCondition = { $or: query.$or };
+        Object.assign(query, { $and: [searchCondition, { location: locationFilter.toLowerCase() }] });
+        delete query.$or;
+      } else {
+        query.location = locationFilter.toLowerCase();
+      }
+    }
+
     const skip = (page - 1) * pageSize;
 
     const [items, total] = await Promise.all([
@@ -24,7 +39,6 @@ export async function GET(request) {
       Item.countDocuments(query),
     ]);
 
-    // Map _id to id or keep as is. Usually antd Table uses rowKey='_id' or 'id'
     return NextResponse.json({
       items,
       total,
@@ -40,6 +54,13 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     await connectToDatabase();
+
+    // Get admin's location from JWT
+    const adminLocation = await getAdminLocation(request);
+    if (!adminLocation) {
+      return NextResponse.json({ error: "Unauthorized: admin location not found" }, { status: 401 });
+    }
+
     const body = await request.json();
 
     const { machineName, sapCode, materialDescription, storeLocation, images } = body;
@@ -53,6 +74,7 @@ export async function POST(request) {
       sapCode,
       materialDescription,
       storeLocation,
+      location: adminLocation,
       images: images || [],
     });
 

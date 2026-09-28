@@ -3,10 +3,17 @@ import * as xlsx from "xlsx";
 import { connectToDatabase } from "@/lib/mongodb";
 import Item from "@/models/Item";
 import { getHeaderMapping, validateMapping } from "@/lib/importMapping";
+import { getAdminLocation } from "@/lib/authHelpers";
 
 export async function POST(request) {
   try {
     await connectToDatabase();
+
+    // Get admin's location from JWT
+    const adminLocation = await getAdminLocation(request);
+    if (!adminLocation) {
+      return NextResponse.json({ error: "Unauthorized: admin location not found" }, { status: 401 });
+    }
 
     const formData = await request.formData();
     const file = formData.get("file");
@@ -79,6 +86,8 @@ export async function POST(request) {
       if (doc.materialDescription !== undefined) doc.materialDescription = String(doc.materialDescription).trim();
       if (doc.storeLocation !== undefined) doc.storeLocation = String(doc.storeLocation).trim();
 
+      // Assign admin's location to each imported row
+      doc.location = adminLocation;
       doc.images = [];
 
       docsToInsert.push(doc);

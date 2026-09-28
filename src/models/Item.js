@@ -21,6 +21,13 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    location: {
+      type: String,
+      required: [true, "Location is required"],
+      enum: ["kim", "kosamba"],
+      lowercase: true,
+      trim: true,
+    },
     images: {
       type: [String],
       validate: {
@@ -38,10 +45,9 @@ const ItemSchema = new mongoose.Schema(
 );
 
 // Indexes for query performance
-
 ItemSchema.index({ machineName: 1 });
-
 ItemSchema.index({ sapCode: 1 });
+ItemSchema.index({ location: 1 });
 ItemSchema.index({ createdAt: -1 });
 
 export default mongoose.models.Item || mongoose.model("Item", ItemSchema);

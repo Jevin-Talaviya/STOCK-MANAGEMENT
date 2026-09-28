@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Item from "@/models/Item";
 import { deleteR2Object } from "@/lib/r2";
+import { getAdminLocation } from "@/lib/authHelpers";
 
 export async function GET(request, { params }) {
   try {
@@ -28,9 +29,20 @@ export async function PUT(request, { params }) {
     const { id } = resolvedParams;
     const body = await request.json();
 
+    // Get admin's location from JWT
+    const adminLocation = await getAdminLocation(request);
+    if (!adminLocation) {
+      return NextResponse.json({ error: "Unauthorized: admin location not found" }, { status: 401 });
+    }
+
     const existingItem = await Item.findById(id);
     if (!existingItem) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
+    }
+
+    // Ensure admin can only edit items from their own location
+    if (existingItem.location && existingItem.location !== adminLocation) {
+      return NextResponse.json({ error: "You can only edit items from your assigned location" }, { status: 403 });
     }
 
     const { machineName, sapCode, materialDescription, storeLocation, images } = body;
@@ -51,7 +63,6 @@ export async function PUT(request, { params }) {
     existingItem.machineName = machineName;
     existingItem.sapCode = sapCode;
     existingItem.materialDescription = materialDescription;
-
     existingItem.storeLocation = storeLocation;
 
     const updatedItem = await existingItem.save();
@@ -71,9 +82,20 @@ export async function DELETE(request, { params }) {
     const resolvedParams = await params;
     const { id } = resolvedParams;
 
+    // Get admin's location from JWT
+    const adminLocation = await getAdminLocation(request);
+    if (!adminLocation) {
+      return NextResponse.json({ error: "Unauthorized: admin location not found" }, { status: 401 });
+    }
+
     const item = await Item.findById(id);
     if (!item) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
+    }
+
+    // Ensure admin can only delete items from their own location
+    if (item.location && item.location !== adminLocation) {
+      return NextResponse.json({ error: "You can only delete items from your assigned location" }, { status: 403 });
     }
 
     // Delete associated photos from R2

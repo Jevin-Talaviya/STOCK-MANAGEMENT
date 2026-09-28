@@ -11,6 +11,7 @@ export default function ItemsTable({
   onSelectionChange = null,
   refreshTrigger = 0,
   onDeleted = null,
+  locationFilter = "",
 }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,12 +62,20 @@ export default function ItemsTable({
     };
   }, [searchVal]);
 
+  // Reset page when locationFilter changes
+  useEffect(() => {
+    setPage(1);
+  }, [locationFilter]);
+
   useEffect(() => {
     let active = true;
     async function loadData() {
       setLoading(true);
       try {
-        const url = `/api/items?page=${page}&pageSize=${pageSize}&q=${encodeURIComponent(searchText)}`;
+        let url = `/api/items?page=${page}&pageSize=${pageSize}&q=${encodeURIComponent(searchText)}`;
+        if (locationFilter) {
+          url += `&location=${encodeURIComponent(locationFilter)}`;
+        }
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch data");
         const result = await res.json();
@@ -87,7 +96,7 @@ export default function ItemsTable({
     return () => {
       active = false;
     };
-  }, [page, pageSize, searchText, refreshTrigger, localTrigger]);
+  }, [page, pageSize, searchText, refreshTrigger, localTrigger, locationFilter]);
 
   const handleTableChange = (pagination) => {
     setPage(pagination.current);

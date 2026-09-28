@@ -1,15 +1,29 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import ItemsTable from "@/components/ItemsTable";
-import { Button, Space, Typography, Popconfirm, message, Modal, Upload } from "antd";
-import { PlusOutlined, FileExcelOutlined, DeleteOutlined, InboxOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Button, Space, Typography, Popconfirm, message, Modal, Upload, Tag } from "antd";
+import { PlusOutlined, FileExcelOutlined, DeleteOutlined, InboxOutlined, DownloadOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 const { Title, Paragraph } = Typography;
 
+const LOCATION_LABELS = {
+  kim: "Kim",
+  kosamba: "Kosamba",
+};
+
+const LOCATION_COLORS = {
+  kim: "#4f46e5",
+  kosamba: "#0891b2",
+};
+
 export default function AdminPage() {
+  const { data: session } = useSession();
+  const adminLocation = session?.user?.location || "";
+  
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -92,11 +106,22 @@ export default function AdminPage() {
       <main className="app-main">
         <div className="page-header-block">
           <div>
-            <Title level={2} style={{ margin: 0, fontWeight: 700 }}>
-              Admin Stock Management
-            </Title>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <Title level={2} style={{ margin: 0, fontWeight: 700 }}>
+                Admin Stock Management
+              </Title>
+              {adminLocation && (
+                <Tag
+                  icon={<EnvironmentOutlined />}
+                  color={LOCATION_COLORS[adminLocation] || "#4f46e5"}
+                  style={{ fontSize: 14, padding: "4px 12px", borderRadius: 6, fontWeight: 600 }}
+                >
+                  {LOCATION_LABELS[adminLocation] || adminLocation}
+                </Tag>
+              )}
+            </div>
             <Paragraph type="secondary" style={{ margin: "4px 0 0 0" }}>
-              Add, update, delete, and import inventory records.
+              Add, update, delete, and import inventory records for <strong>{LOCATION_LABELS[adminLocation] || adminLocation}</strong> site.
             </Paragraph>
           </div>
           <Space wrap>
@@ -115,8 +140,8 @@ export default function AdminPage() {
               </Popconfirm>
             )}
             <Popconfirm
-              title="Delete All Records"
-              description="Are you absolutely sure you want to delete ALL records in the database? This action is permanent and cannot be undone."
+              title={`Delete All ${LOCATION_LABELS[adminLocation] || ""} Records`}
+              description={`Are you absolutely sure you want to delete ALL records for ${LOCATION_LABELS[adminLocation] || "this location"}? This action is permanent and cannot be undone.`}
               onConfirm={() => handleBulkDelete(true)}
               okText="Yes, Delete All"
               cancelText="No"
@@ -128,7 +153,7 @@ export default function AdminPage() {
             </Popconfirm>
             <Button
               icon={<DownloadOutlined />}
-              href="/api/items/export"
+              href={`/api/items/export?location=${adminLocation}`}
               target="_blank"
             >
               Download All (Excel)
@@ -158,11 +183,12 @@ export default function AdminPage() {
           onDeleted={() => {
             setSelectedRowKeys([]);
           }}
+          locationFilter={adminLocation}
         />
 
         {/* Bulk Import Modal */}
         <Modal
-          title="Bulk Import Items"
+          title={`Bulk Import Items — ${LOCATION_LABELS[adminLocation] || adminLocation}`}
           open={isImportModalOpen}
           footer={null}
           onCancel={() => {
@@ -177,6 +203,8 @@ export default function AdminPage() {
               Upload an Excel (.xlsx, .xls) or CSV file. The columns must include at minimum:
               <strong> Machine Name</strong>.
               Other columns: SAP Code, Material Description, Store Location.
+              <br />
+              <em style={{ color: "#64748b" }}>All imported records will be assigned to <strong>{LOCATION_LABELS[adminLocation] || adminLocation}</strong>.</em>
             </p>
             
             <Upload.Dragger {...importProps} disabled={importLoading}>

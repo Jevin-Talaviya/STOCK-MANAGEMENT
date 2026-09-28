@@ -13,6 +13,13 @@ const AdminSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password hash is required"],
     },
+    location: {
+      type: String,
+      required: [true, "Location is required"],
+      enum: ["kim", "kosamba"],
+      lowercase: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,
